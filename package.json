@@ -4,7 +4,7 @@
   "description": "This is a project created for movies and music download",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "kelvin",
   "license": "ISC",
@@ -24,5 +24,9 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.18"
+  },
+  "engines": {
+    "node": "16.x",
+    "npm": "8.x"
   }
 }

@@ -6,12 +6,12 @@ const movieSchema = mongoose.Schema(
     title: {
       type: String,
       trim: true,
-      require: true,
+      required: true,
     },
     storyLine: {
       type: String,
       trim: true,
-      require: true,
+      required: true,
     },
     director: {
       type: mongoose.Schema.Types.ObjectId,
@@ -30,6 +30,7 @@ const movieSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
     genres: {
       type: [String],
       required: true,

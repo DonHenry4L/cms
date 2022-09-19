@@ -1,6 +1,5 @@
 const { isValidObjectId } = require("mongoose");
 const Movie = require("../models/movie");
-const review = require("../models/review");
 const Review = require("../models/review");
 const { sendError, getAverageRatings } = require("../utils/helper");
 
@@ -9,8 +8,6 @@ exports.addReview = async (req, res) => {
   const { content, rating } = req.body;
   const userId = req.user._id;
 
-  if (!req.user.isVerified)
-    return sendError(res, "Please verify your email first!");
   if (!isValidObjectId(movieId)) return sendError(res, "Invalid Movie!");
 
   const movie = await Movie.findOne({ _id: movieId, status: "public" });
@@ -21,7 +18,7 @@ exports.addReview = async (req, res) => {
     parentMovie: movie._id,
   });
   if (isAlreadyReviewed)
-    return sendError(res, "Invalid request, review is already there!");
+    return sendError(res, "Invalid request, review is already their!");
 
   // create and update review.
   const newReview = new Review({
@@ -68,13 +65,10 @@ exports.removeReview = async (req, res) => {
   if (!isValidObjectId(reviewId)) return sendError(res, "Invalid review ID!");
 
   const review = await Review.findOne({ owner: userId, _id: reviewId });
-
   if (!review) return sendError(res, "Invalid request, review not found!");
 
   const movie = await Movie.findById(review.parentMovie).select("reviews");
-  movie.reviews = movie.reviews.filter(
-    (movieReviewId) => movieReviewId.toString() !== reviewId
-  );
+  movie.reviews = movie.reviews.filter((rId) => rId.toString() !== reviewId);
 
   await Review.findByIdAndDelete(reviewId);
 
@@ -101,6 +95,7 @@ exports.getReviewsByMovie = async (req, res) => {
   const reviews = movie.reviews.map((r) => {
     const { owner, content, rating, _id: reviewID } = r;
     const { name, _id: ownerId } = owner;
+
     return {
       id: reviewID,
       owner: {

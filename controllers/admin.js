@@ -1,7 +1,10 @@
 const Movie = require("../models/movie");
 const Review = require("../models/review");
 const User = require("../models/user");
-const { topRatedPipeline, getAverageRatings } = require("../utils/helper");
+const {
+  topRatedMoviesPipeline,
+  getAverageRatings,
+} = require("../utils/helper");
 
 exports.getAppInfo = async (req, res) => {
   const movieCount = await Movie.countDocuments();
@@ -10,8 +13,9 @@ exports.getAppInfo = async (req, res) => {
 
   res.json({ appInfo: { movieCount, reviewCount, userCount } });
 };
+
 exports.getMostRated = async (req, res) => {
-  const movies = await Movie.aggregate(topRatedPipeline());
+  const movies = await Movie.aggregate(topRatedMoviesPipeline());
 
   const mapMovies = async (m) => {
     const reviews = await getAverageRatings(m._id);
@@ -19,7 +23,6 @@ exports.getMostRated = async (req, res) => {
     return {
       id: m._id,
       title: m.title,
-      poster: m.poster,
       reviews: { ...reviews },
     };
   };

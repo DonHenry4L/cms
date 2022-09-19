@@ -7,7 +7,6 @@ const userSchema = mongoose.Schema({
     trim: true,
     required: true,
   },
-
   email: {
     type: String,
     trim: true,
@@ -25,7 +24,7 @@ const userSchema = mongoose.Schema({
   },
   role: {
     type: String,
-    require: true,
+    required: true,
     default: "user",
     enum: ["admin", "user"],
   },
@@ -35,6 +34,7 @@ userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
   next();
 });
 

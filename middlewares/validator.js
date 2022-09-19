@@ -4,7 +4,7 @@ const genres = require("../utils/genres");
 
 exports.userValidator = [
   check("name").trim().not().isEmpty().withMessage("Name is missing!"),
-  check("email").normalizeEmail().isEmail().withMessage("Email is invalid"),
+  check("email").normalizeEmail().isEmail().withMessage("Email is invalid!"),
   check("password")
     .trim()
     .not()
@@ -25,9 +25,13 @@ exports.validatePassword = [
 ];
 
 exports.signInValidator = [
-  check("email").normalizeEmail().isEmail().withMessage("Email is invalid"),
+  check("email")
+    .normalizeEmail()
+    .isEmail()
+    .withMessage("Invalid Email Address!"),
   check("password").trim().not().isEmpty().withMessage("Password is missing!"),
 ];
+
 exports.actorInfoValidator = [
   check("name").trim().not().isEmpty().withMessage("Actor name is missing!"),
   check("about")
@@ -50,7 +54,7 @@ exports.validateMovie = [
     .isEmpty()
     .withMessage("Storyline is important!"),
   check("language").trim().not().isEmpty().withMessage("Language is missing!"),
-  check("releasedDate").isDate().withMessage("Released date is missing!"),
+  check("releasesDate").isDate().withMessage("Released date is missing!"),
   check("status")
     .isIn(["public", "private"])
     .withMessage("Movie status must be public or private!"),
@@ -73,9 +77,9 @@ exports.validateMovie = [
         if (typeof tag !== "string")
           throw Error("Tags must be an array of strings!");
       }
+
       return true;
     }),
-
   check("cast")
     .isArray()
     .withMessage("Cast must be an array of objects!")
@@ -99,8 +103,16 @@ exports.validateMovie = [
   //   return true;
   // }),
 ];
+// exports.validatePost = [
+//   check("title").trim().not().isEmpty().withMessage("Post title is missing!"),
+//   check("category")
+//     .trim()
+//     .not()
+//     .isEmpty()
+//     .withMessage("Post category is missing!"),
+// ];
 
-(exports.validateTrailer = check("trailer")
+exports.validateTrailer = check("trailer")
   .isObject()
   .withMessage("trailer must be an object with url and public_id")
   .custom(({ url, public_id }) => {
@@ -118,11 +130,12 @@ exports.validateMovie = [
     } catch (error) {
       throw Error("Trailer url is invalid!");
     }
-  })),
-  (exports.validateRatings = check(
-    "rating",
-    "Rating must be a number between 0 and 10"
-  ).isFloat({ min: 0, max: 10 }));
+  });
+
+exports.validateRatings = check(
+  "rating",
+  "Rating must be a number between 0 and 10."
+).isFloat({ min: 0, max: 10 });
 
 exports.validate = (req, res, next) => {
   const error = validationResult(req).array();

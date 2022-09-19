@@ -21,9 +21,9 @@ exports.createActor = async (req, res) => {
 };
 
 // update
-//Things to consider while updating.
-//No.1 - is image file is / avatar is also updating
-//No.2 - if yes then remove old image before uploading new image / avatar
+// Things to consider while updating.
+// No.1 - is image file is / avatar is also updating.
+// No.2 - if yes then remove old image before uploading new image / avatar.
 
 exports.updateActor = async (req, res) => {
   const { name, about, gender } = req.body;
@@ -97,18 +97,19 @@ exports.searchActor = async (req, res) => {
 
 exports.getLatestActors = async (req, res) => {
   const result = await Actor.find().sort({ createdAt: "-1" }).limit(12);
+
   const actors = result.map((actor) => formatActor(actor));
 
   res.json(actors);
 };
 
-exports.getSingleActors = async (req, res) => {
+exports.getSingleActor = async (req, res) => {
   const { id } = req.params;
 
-  if (!isValidObjectId(id)) return sendError(res, "Invalid Request!");
+  if (!isValidObjectId(id)) return sendError(res, "Invalid request!");
 
   const actor = await Actor.findById(id);
-  if (!actor) return sendError(res, "Invalid Request, actor not found!", 404);
+  if (!actor) return sendError(res, "Invalid request, actor not found!", 404);
   res.json({ actor: formatActor(actor) });
 };
 

@@ -12,7 +12,7 @@ exports.generateRandomByte = () => {
       if (err) reject(err);
       const buffString = buff.toString("hex");
 
-      console.log(buffString);
+      // console.log(buffString);
       resolve(buffString);
     });
   });
@@ -113,7 +113,7 @@ exports.getAverageRatings = async (movieId) => {
   return reviews;
 };
 
-exports.topRatedPipeline = (type) => {
+exports.topRatedMoviesPipeline = (type) => {
   const matchOptions = {
     reviews: { $exists: true },
     status: { $eq: "public" },

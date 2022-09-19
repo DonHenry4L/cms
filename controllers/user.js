@@ -26,7 +26,6 @@ exports.create = async (req, res) => {
   });
 
   await newEmailVerificationToken.save();
-
   // send that otp to our user
 
   var transport = generateMailTransporter();
@@ -78,7 +77,7 @@ exports.verifyEmail = async (req, res) => {
     from: "verification@9plug.com",
     to: user.email,
     subject: "Welcome Email",
-    html: "<h1>Welcome to our app and thanks for choosing us.</h1>",
+    html: `<h1>Hello "${user.name}", welcome to 9plug.com</h1>`,
   });
 
   const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
@@ -212,13 +211,13 @@ exports.resetPassword = async (req, res) => {
     subject: "Password Reset Successfully",
     html: `
       <h1>Password Reset Successfully</h1>
-      <p>Now you can use new password.</p>
+      <p>Now you can use your new password.</p>
 
     `,
   });
 
   res.json({
-    message: "Password reset successfully, now you can use new password.",
+    message: "Password reset successfully, now you can use your new password.",
   });
 };
 
